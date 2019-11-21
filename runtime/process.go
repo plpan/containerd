@@ -437,6 +437,8 @@ func (p *process) Start() error {
 			args = append(p.container.runtimeArgs, "start", p.container.id)
 			cmd  = exec.Command(p.container.runtime, args...)
 		)
+		fmt.Printf("stupig-containerd: %s %#v\n", p.container.runtime, args)
+		// stupig-containerd: docker-runc []string{"start", "441444668c6d5708d62af8968e5da26bd7f8b64f8b1eac3f0073eba896c8fa1d"}
 		go func() {
 			out, err := cmd.CombinedOutput()
 			if err != nil {

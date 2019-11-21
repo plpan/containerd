@@ -45,6 +45,8 @@ func (s *apiServer) CreateContainer(ctx context.Context, c *types.CreateContaine
 	if c.BundlePath == "" {
 		return nil, errors.New("empty bundle path")
 	}
+	fmt.Printf("stupig-containerd: %#v\n", c)
+	// stupig-containerd: &types.CreateContainerRequest{Id:"5afb1028bb02e4277940fa870974f0075bfeaa4bd3d26642a32884c25088c914", BundlePath:"/var/run/docker/libcontainerd/5afb1028bb02e4277940fa870974f0075bfeaa4bd3d26642a32884c25088c914", Checkpoint:"", Stdin:"/var/run/docker/libcontainerd/5afb1028bb02e4277940fa870974f0075bfeaa4bd3d26642a32884c25088c914/init-stdin", Stdout:"/var/run/docker/libcontainerd/5afb1028bb02e4277940fa870974f0075bfeaa4bd3d26642a32884c25088c914/init-stdout", Stderr:"/var/run/docker/libcontainerd/5afb1028bb02e4277940fa870974f0075bfeaa4bd3d26642a32884c25088c914/init-stderr", Labels:[]string(nil), NoPivotRoot:false, Runtime:"docker-runc", RuntimeArgs:[]string(nil), CheckpointDir:"/home/docker_rt/containers/5afb1028bb02e4277940fa870974f0075bfeaa4bd3d26642a32884c25088c914/checkpoints"}
 	e := &supervisor.StartTask{}
 	e.ID = c.Id
 	e.BundlePath = c.BundlePath

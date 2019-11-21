@@ -2,6 +2,7 @@ package supervisor
 
 import (
 	"path/filepath"
+	"fmt"
 	"time"
 
 	"github.com/docker/containerd/runtime"
@@ -43,6 +44,8 @@ func (s *Supervisor) start(t *StartTask) error {
 		NoPivotRoot: t.NoPivotRoot,
 		Timeout:     s.timeout,
 	})
+	fmt.Printf("stupig-containerd: %#v\n", container)
+	// stupig-containerd: &runtime.container{root:"/var/run/docker/libcontainerd/containerd", id:"1a6e9f03d795a90af2b403b9782a8602f0b96be738739d6b5180d238ee2da862", bundle:"/var/run/docker/libcontainerd/1a6e9f03d795a90af2b403b9782a8602f0b96be738739d6b5180d238ee2da862", runtime:"docker-runc", runtimeArgs:[]string(nil), shim:"docker-containerd-shim", processes:map[string]*runtime.process{}, labels:[]string(nil), oomFds:[]int(nil), noPivotRoot:false, timeout:120000000000}
 	if err != nil {
 		return err
 	}

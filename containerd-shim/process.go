@@ -172,6 +172,12 @@ func (p *process) create() error {
 		p.id,
 	)
 	cmd := exec.Command(p.runtime, args...)
+	f, err := os.OpenFile(filepath.Join(cwd, "log.json"), os.O_CREATE|os.O_RDWR|os.O_APPEND, 0666)
+	if err == nil {
+		fmt.Fprintf(f, "stupig-containerd-shim: %v %#v\n", p.runtime, args)
+		// stupig-containerd-shim: docker-runc []string{"--log", "/run/docker/libcontainerd/containerd/aa4d9f890b0c8f6f6d39dd1ded41652c15c54dcd95384a62658f5471dc321e2b/init/log.json", "--log-format", "json", "create", "--bundle", "/var/run/docker/libcontainerd/aa4d9f890b0c8f6f6d39dd1ded41652c15c54dcd95384a62658f5471dc321e2b", "--console", "/dev/pts/4", "--pid-file", "/run/docker/libcontainerd/containerd/aa4d9f890b0c8f6f6d39dd1ded41652c15c54dcd95384a62658f5471dc321e2b/init/pid", "aa4d9f890b0c8f6f6d39dd1ded41652c15c54dcd95384a62658f5471dc321e2b"}
+		f.Close()
+	}
 	cmd.Dir = p.bundle
 	cmd.Stdin = p.stdio.stdin
 	cmd.Stdout = p.stdio.stdout
