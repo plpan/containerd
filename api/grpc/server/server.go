@@ -223,10 +223,14 @@ func createAPIContainer(c runtime.Container, getPids bool) (*types.Container, er
 				Hard: rl.Hard,
 			})
 		}
+		// fmt.Printf("stupig-containerd: %#v\n", proc)
+		// stupig-containerd: &types.Process{Pid:"init", Terminal:true, User:(*types.User)(0xc00027a000), Args:[]string{"bash"}, Env:[]string{"PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin", "HOSTNAME=1dffd1da87ad", "TERM=xterm", "NGINX_VERSION=1.17.5", "NJS_VERSION=0.3.6", "PKG_RELEASE=1~buster"}, Cwd:"/", SystemPid:0x722, Stdin:"/var/run/docker/libcontainerd/1dffd1da87ad041f52d759ec62a82c23b60c9c804dfb2d4f3aed98a4446bc81c/init-stdin", Stdout:"/var/run/docker/libcontainerd/1dffd1da87ad041f52d759ec62a82c23b60c9c804dfb2d4f3aed98a4446bc81c/init-stdout", Stderr:"/var/run/docker/libcontainerd/1dffd1da87ad041f52d759ec62a82c23b60c9c804dfb2d4f3aed98a4446bc81c/init-stderr", Capabilities:[]string{"CAP_CHOWN", "CAP_DAC_OVERRIDE", "CAP_FSETID", "CAP_FOWNER", "CAP_MKNOD", "CAP_NET_RAW", "CAP_SETGID", "CAP_SETUID", "CAP_SETFCAP", "CAP_SETPCAP", "CAP_NET_BIND_SERVICE", "CAP_SYS_CHROOT", "CAP_KILL", "CAP_AUDIT_WRITE"}, ApparmorProfile:"", SelinuxLabel:"", NoNewPrivileges:false, Rlimits:[]*types.Rlimit(nil)}
 		procs = append(procs, proc)
 	}
 	var pids []int
 	state := c.State()
+	// fmt.Printf("stupig-containerd: %#v\n", state)
+	// running
 	if getPids && (state == runtime.Running || state == runtime.Paused) {
 		if pids, err = c.Pids(); err != nil {
 			return nil, grpc.Errorf(codes.Internal, "get all pids for container: "+err.Error())

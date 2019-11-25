@@ -64,6 +64,8 @@ func (s *Supervisor) start(t *StartTask) error {
 	if t.Checkpoint != nil {
 		task.CheckpointPath = filepath.Join(t.CheckpointDir, t.Checkpoint.Name)
 	}
+	fmt.Printf("stupig-containerd: %#v\n", task)
+	// stupig-containerd: &supervisor.startTask{Container:(*runtime.container)(0xc000208000), CheckpointPath:"", Stdin:"/var/run/docker/libcontainerd/21c48b4ef92d2f47425b86db174c8e029bd3f02d97ea244c753d54c9889c9e69/init-stdin", Stdout:"/var/run/docker/libcontainerd/21c48b4ef92d2f47425b86db174c8e029bd3f02d97ea244c753d54c9889c9e69/init-stdout", Stderr:"/var/run/docker/libcontainerd/21c48b4ef92d2f47425b86db174c8e029bd3f02d97ea244c753d54c9889c9e69/init-stderr", Err:(chan error)(0xc000320240), StartResponse:(chan supervisor.StartResponse)(0xc0003201e0)}
 
 	s.startTasks <- task
 	ContainerCreateTimer.UpdateSince(start)

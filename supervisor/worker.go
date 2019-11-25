@@ -77,6 +77,8 @@ func (w *worker) Start() {
 		}
 		// only call process start if we aren't restoring from a checkpoint
 		// if we have restored from a checkpoint then the process is already started
+		fmt.Printf("stupig-containerd: %#v\n", t.CheckpointPath)
+		// 如果是首次创建容器，则CheckpointPath为空，执行runc start命令真正启动容器进程
 		if t.CheckpointPath == "" {
 			if err := process.Start(); err != nil {
 				logrus.WithField("error", err).Error("containerd: start init process")

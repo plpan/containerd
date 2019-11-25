@@ -402,10 +402,12 @@ func (c *container) Start(checkpointPath string, s Stdio) (Process, error) {
 	if err := os.Mkdir(processRoot, 0755); err != nil {
 		return nil, err
 	}
+	// 创建containerd-shim子进程，由containerd-shim调用runc create创建容器，runc create创建的容器此时还未执行用户命令（runc start触发用户命令的执行）
 	cmd := exec.Command(c.shim,
 		c.id, c.bundle, c.runtime,
 	)
 	cmd.Dir = processRoot
+	// 新开进程组
 	cmd.SysProcAttr = &syscall.SysProcAttr{
 		Setpgid: true,
 	}
@@ -492,6 +494,7 @@ func (c *container) createCmd(pid string, cmd *exec.Cmd, p *process) error {
 			}
 
 			if same, err := p.isSameProcess(); same && p.pid > 0 {
+				// normally, it's false
 				// The process changed its PR_SET_PDEATHSIG, so force
 				// kill it
 				logrus.Infof("containerd: %s:%s (pid %v) has become an orphan, killing it", p.container.id, p.id, p.pid)
@@ -511,6 +514,7 @@ func (c *container) createCmd(pid string, cmd *exec.Cmd, p *process) error {
 			close(p.cmdDoneCh)
 		}()
 	}()
+	// 等待容器进程启动，如果正常启动，则会把容器进程id写到容器目录内的pid文件
 	if err := c.waitForCreate(p, cmd); err != nil {
 		return err
 	}
@@ -597,6 +601,7 @@ type waitArgs struct {
 func (c *container) waitForCreate(p *process, cmd *exec.Cmd) error {
 	wc := make(chan error, 1)
 	go func() {
+		// 循环等待，直到容器启动正常，或者容器启动失败
 		for {
 			if _, err := p.getPidFromFile(); err != nil {
 				if os.IsNotExist(err) || err == errInvalidPidInt {
